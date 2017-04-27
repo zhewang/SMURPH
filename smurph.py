@@ -2,7 +2,7 @@ import math
 import numpy as np
 import json
 
-from subprocess import Popen
+from subprocess import Popen, PIPE
 from scipy.integrate import quad
 
 
@@ -26,14 +26,24 @@ def inner(pd1, pd2):
         sigma += I[0]
     return sigma
 
+def calPD(points):
+    str_data = json.dumps(points)
+    p = Popen(['./persistence/bin/cal_pd', '2', str_data], stdout=PIPE)
+    out, err = p.communicate()
+
+    pd = []
+    for line in out.split('\n'):
+        line = line.split()
+        if len(line) == 3:
+            pd.append((float(line[1]), float(line[2])))
+    return pd
+
 if __name__ == '__main__':
-    pd1 = [(1.0, 1.2), (1.0, 1.2), (1.0, 1.2), (1.3, 2.0), (2.0, 2.0)]
-    pd2 = [(2.0, 5.0), (1.0, 2.0), (2.0, 8.0), (4.0, 9.0), (9.0, 11.0)]
 
+    p1 = [{'px':0, 'py':0},{'px':1, 'py':1},{'px':2, 'py':2}]
+    p2 = [{'px':1, 'py':0},{'px':1, 'py':1},{'px':2, 'py':1}]
+
+    pd1 = calPD(p1)
+    pd2 = calPD(p2)
     print(inner(pd1, pd2))
-
-    data = [{'px':0, 'py':0},{'px':1, 'py':1},{'px':2, 'py':2}]
-    str_data = json.dumps(data)
-    p = Popen(['./persistence/bin/cal_pd', '2', str_data])
-    p.communicate()
 
