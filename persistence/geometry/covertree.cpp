@@ -21,7 +21,7 @@ CoverTree::CoverTree(const SparsePoints & _points, double _scale)  {
 
 	is_constructed = false;
 	root_level = (int)(log(diameter_ub)/log(scale))+1;
-	std::cout << "diameter: " << diameter_ub << " ; quantized upper bound: " << pow(scale,root_level) << " root level: " << root_level << std::endl;
+	//std::cout << "diameter: " << diameter_ub << " ; quantized upper bound: " << pow(scale,root_level) << " root level: " << root_level << std::endl;
 }
 
 CoverTree::CoverTree(const SparsePoints & _points, std::vector<int> _levels, std::vector<int> _parents, double _scale)  {
@@ -51,7 +51,7 @@ CoverTree::CoverTree(const SparsePoints & _points, std::vector<int> _levels, std
 	}
 	//center = center*(1.0/points.size());
 
-	std::cout << "diameter: " << diameter_ub << " ; quantized upper bound: " << pow(scale,root_level) << " root level: " << root_level << std::endl;
+	//std::cout << "diameter: " << diameter_ub << " ; quantized upper bound: " << pow(scale,root_level) << " root level: " << root_level << std::endl;
 
 	/*
 	for(int i = 0; i < _levels.size(); i++)  {
@@ -76,7 +76,7 @@ CoverTree::CoverTree(const SparsePoints & _points, std::vector<int> _levels, std
 				root_node = new CoverTreeNode(i,_levels[i]);
 				continue;
 			}
-			if(debug) std::cout << "creating and inserting " << i << " : " << _levels[i] << " : " << _parents[i] << std::endl;
+			//if(debug) std::cout << "creating and inserting " << i << " : " << _levels[i] << " : " << _parents[i] << std::endl;
 			root_node->create_and_insert_node(i,_levels[i],_parents[i]);
 		}
 	}
@@ -95,10 +95,10 @@ CoverTree::CoverTree(const SparsePoints & _points, std::vector<int> _levels, std
 
 CoverTree::~CoverTree()  {
 	if(is_constructed)  {
-		std::cout << "deleting root node..." << std::endl;
+		//std::cout << "deleting root node..." << std::endl;
 		delete root_node;
 	}
-	std::cout << "... done deleting cover tree..." << std::endl;
+	//std::cout << "... done deleting cover tree..." << std::endl;
 }
 
 std::set<int> CoverTree::ball_query(SparseVector _pt, double _radius)  {
@@ -221,7 +221,7 @@ bool CoverTree::insert_point(int _q, const std::vector<CoverTreeNode*> & _coverS
 	SparseVector p_q = points[_q];
 	double candidate_set_distance = this->distance_to_set(_q, children_of_candidates);
 	if(candidate_set_distance == 0)  {
-		std::cout << "duplicate point!" << std::endl;
+		//std::cout << "duplicate point!" << std::endl;
 		inserted_level = root_level+1;
 		return false;
 	}
@@ -240,8 +240,8 @@ bool CoverTree::insert_point(int _q, const std::vector<CoverTreeNode*> & _coverS
 	}
 
 	double cover_set_distance = this->distance_to_set(_q, _coverSet);
-	if(cover_set_distance == -1)
-		std::cout << "... empty cover set?" << std::endl;
+	//if(cover_set_distance == -1)
+		//std::cout << "... empty cover set?" << std::endl;
 	bool is_parent_found = this->insert_point(_q, child_cover_set, _l-1, inserted_level);
 	if(!is_parent_found && cover_set_distance > cover_bound)  {
 		if(debug) std::cout << "parent not found, but cover set distance not satisifed" << std::endl;
@@ -266,8 +266,8 @@ bool CoverTree::insert_point(int _q, const std::vector<CoverTreeNode*> & _coverS
 				//break;
 			}
 		}
-		if(min_dist == -1)
-			std::cout << "no parent found!!!" << std::endl;
+		//if(min_dist == -1)
+			//std::cout << "no parent found!!!" << std::endl;
 		inserted_level = _l-1;
 		if(debug) std::cout << "inserting child at level " << _l-1 << " ... out of " << num_potential_parents << " potential parents" << std::endl;
 		parent->insert_child(new CoverTreeNode(parent,_q,_l-1));
@@ -283,7 +283,7 @@ void CoverTree::check_invariants()  {
 	std::vector<CoverTreeNode*> all_nodes;
 	std::set<int> unique_ids;
 	root_node->get_unique_nodes(&all_nodes, &unique_ids);
-	std::cout << "number of unique nodes: " << all_nodes.size() << std::endl;
+	//std::cout << "number of unique nodes: " << all_nodes.size() << std::endl;
 
 	// invariant 1: nesting
 	for(int i = 0; i < all_nodes.size(); i++)  {
@@ -306,8 +306,8 @@ void CoverTree::check_invariants()  {
 				}
 			}
 
-			if(!found_itself)
-				std::cout << "nesting violated!" << std::endl;
+			//if(!found_itself)
+				//std::cout << "nesting violated!" << std::endl;
 		}
 	}
 
@@ -318,8 +318,8 @@ void CoverTree::check_invariants()  {
 			continue;
 		CoverTreeNode* parent_node = node->get_parent();
 		double parent_radius = pow(scale,parent_node->level());
-		if(points[node->idx()].length(points[parent_node->idx()]) >= parent_radius)
-			std::cout << "covering violation! " << parent_radius << " : " << points[node->idx()].length(points[parent_node->idx()]) << std::endl;
+		//if(points[node->idx()].length(points[parent_node->idx()]) >= parent_radius)
+			//std::cout << "covering violation! " << parent_radius << " : " << points[node->idx()].length(points[parent_node->idx()]) << std::endl;
 	}
 
 	// invariant 3: separation
@@ -332,8 +332,9 @@ void CoverTree::check_invariants()  {
 			if(node_i->level() != node_j->level())
 				continue;
 			double dist_check = pow(scale,node_i->level());
-			if(points[node_i->idx()].length(points[node_j->idx()]) <= dist_check)
-				std::cout << "separation violation! " << points[node_i->idx()].length(points[node_j->idx()]) << " : " << dist_check << std::endl;
+			if(points[node_i->idx()].length(points[node_j->idx()]) <= dist_check) {
+				//std::cout << "separation violation! " << points[node_i->idx()].length(points[node_j->idx()]) << " : " << dist_check << std::endl;
+            }
 			else  {
 				packing_quality += points[node_i->idx()].length(points[node_j->idx()])/dist_check;
 				packing_weight++;
@@ -342,7 +343,7 @@ void CoverTree::check_invariants()  {
 			//	std::cout << "packing quality["<<node_i->level()<<"]: " << points[node_i->idx()].length(points[node_j->idx()]) << " : " << dist_check << std::endl;
 		}
 	}
-	std::cout << "packing quality: " << packing_quality/packing_weight << std::endl;
+	//std::cout << "packing quality: " << packing_quality/packing_weight << std::endl;
 
 	// are all children at a given node covered?
 	for(int i = 0; i < all_nodes.size(); i++)  {
@@ -384,12 +385,12 @@ std::vector<int> CoverTree::fps()  {
 	}
 
 	// add points one at a time, farthest in Euclidean distance from all other points
-	std::cout << "farthest point sampling " << std::flush;
+	//std::cout << "farthest point sampling " << std::flush;
 	int num_dots = 50 >= points.size() ? (points.size()-1) : 50;
 	int dot_interval = points.size() / num_dots;
 	for(int i = 1; i < points.size(); i++)  {
-		if(i % dot_interval == 0)
-			std::cout << "." << std::flush;
+		//if(i % dot_interval == 0)
+			//std::cout << "." << std::flush;
 		double max_dist = -1e10;
 		int best_ind = -1;
 
@@ -408,7 +409,7 @@ std::vector<int> CoverTree::fps()  {
 		}
 		sampling.push_back(best_ind);
 	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
 	delete [] minimum_distances;
 
 	return sampling;
@@ -500,11 +501,12 @@ void CoverTreeNode::populate_parent_radii(std::vector<double>* node_radii, std::
 bool CoverTreeNode::fully_covers(const SparseVector & _pt, const SparsePoints & _points, double _scale)  {
 	double radius = pow(_scale,l);
 	if(_pt.length(_points[i]) > radius)  {
-		std::cout << _pt << " not covered at level " << l << " by " << i << std::endl;
+		//std::cout << _pt << " not covered at level " << l << " by " << i << std::endl;
 		return false;
 	}
-	else
-		std::cout << "node covered at level " << l << " by " << i << std::endl;
+	else {
+		//std::cout << "node covered at level " << l << " by " << i << std::endl;
+    }
 	if(this->is_root())
 		return true;
 	return parent->fully_covers(_pt, _points, _scale);

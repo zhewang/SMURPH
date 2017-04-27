@@ -53,11 +53,11 @@ SparseRipsFiltration::SparseRipsFiltration(int _maxD, double _eps) : Filtration(
 
 SparseRipsFiltration::~SparseRipsFiltration()  {
 	if(is_initialized)  {
-		std::cout << "deleting cover tree..." << std::endl;
+		//std::cout << "deleting cover tree..." << std::endl;
 		//delete cover_tree;
-		std::cout << "deleting metric space..." << std::endl;
+		//std::cout << "deleting metric space..." << std::endl;
 		delete metric_space;
-		std::cout << "done with deletion" << std::endl;
+		//std::cout << "done with deletion" << std::endl;
 	}
 }
 
@@ -113,7 +113,7 @@ bool SparseRipsFiltration::build_filtration()  {
 		metric_space->set_time_scale(1);
 		this->sparse_bron_kerbosch(&all_simplices, vertex_set, 2);
 		int num_simplices = all_simplices.size();
-		std::cout << "total number of simplices: " << num_simplices << std::endl;
+		//std::cout << "total number of simplices: " << num_simplices << std::endl;
 		size_satisfied = true;
 	}
 	else  {
@@ -127,7 +127,7 @@ bool SparseRipsFiltration::build_filtration()  {
 			metric_space->set_time_scale(0.5*(upper_scale+lower_scale));
 			this->sparse_bron_kerbosch(&all_simplices, vertex_set, 2);
 			int num_simplices = all_simplices.size();
-			std::cout << "total number of simplices["<<iteration<<"]: " << num_simplices << "; scale: " << metric_space->get_time_scale() << " ("<<lower_scale<<","<<upper_scale<<")"<<std::endl;
+			//std::cout << "total number of simplices["<<iteration<<"]: " << num_simplices << "; scale: " << metric_space->get_time_scale() << " ("<<lower_scale<<","<<upper_scale<<")"<<std::endl;
 
 			if(max_simplices == 0)  {
 				size_satisfied = true;
@@ -141,7 +141,7 @@ bool SparseRipsFiltration::build_filtration()  {
 
 			if (iteration >= 50) {
 				size_satisfied = true;
-				std::cout << "filtration iteration too high, bailing" << std::endl;
+				//std::cout << "filtration iteration too high, bailing" << std::endl;
 				break;
 			}
 
@@ -189,7 +189,7 @@ bool SparseRipsFiltration::build_filtration()  {
 			max_num_simplices *= (num_points-j);
 		for(int j = 1; j <= i; j++)
 			max_num_simplices /= (j+1);
-		std::cout << "number of " << i << " simplices: " << simplex_count[i] << " / " << max_num_simplices << " ; sparsity: " << 100.0*((double)simplex_count[i]/max_num_simplices) << "%" << std::endl;
+		//std::cout << "number of " << i << " simplices: " << simplex_count[i] << " / " << max_num_simplices << " ; sparsity: " << 100.0*((double)simplex_count[i]/max_num_simplices) << "%" << std::endl;
 		simplex_sparsity.push_back(((double)simplex_count[i]/max_num_simplices));
 	}
 	return size_satisfied;
