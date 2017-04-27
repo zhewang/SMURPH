@@ -16,7 +16,6 @@ Points read_points_from_json(std::string str, int dim)
 {
     Points points;
     json data = json::parse(str);
-    std::cout << data.dump() << std::endl;
     //for(auto it = data.begin(); it != data.end(); it ++) {
     for(auto &t : data) {
         vector<double> p;
