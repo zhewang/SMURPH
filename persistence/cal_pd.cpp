@@ -19,10 +19,10 @@ Points read_points_from_json(std::string str, int dim)
     //for(auto it = data.begin(); it != data.end(); it ++) {
     for(auto &t : data) {
         vector<double> p;
-        p.push_back(t["px"]);
-        p.push_back(t["py"]);
+        p.push_back(t[0]);
+        p.push_back(t[1]);
         if(dim == 3) {
-            p.push_back(t["pz"]);
+            p.push_back(t[2]);
         }
         points.push_back(Vector(p));
     }
