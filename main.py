@@ -5,6 +5,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
 
+from sklearn.decomposition import KernelPCA
+
 import smurph
 
 # load FirstMM_object_data [M. Neumann 2013]
@@ -30,8 +32,19 @@ def calculateKernelforDB():
         for line in f.readlines():
             pc_list.append(loadPoints('./DB/'+line.rstrip('\n')))
     k = smurph.kernelMP(pc_list, [0.1], 10, 100, 1)
-    np.savetxt('kernel_DB_10_100.txt', k)
+    np.savetxt('kernel.txt', k)
+
+def plot2D(kernel):
+    U, s, V = np.linalg.svd(kernel, full_matrices=True)
+    result = U.dot(np.diag(np.sqrt(s)))
+    x = result[:,0]
+    y = result[:,1]
+    plt.scatter(x, y)
+    plt.show()
 
 
 if __name__ == '__main__':
     calculateKernelforDB()
+
+    kernel = np.loadtxt('kernel.txt')
+    plot2D(kernel)

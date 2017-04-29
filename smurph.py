@@ -67,6 +67,39 @@ def flist_inner(flist1, flist2, l_bound, weights):
 ################################################################################
 # helper functions
 
+def calPD_RIPSER(points):
+    assert(len(points) > 0)
+    distM = distance_matrix(points, points)
+    p = Popen(['./ripser'], stdin=PIPE, stdout=PIPE)
+
+    lowerTriM = ""
+    for i in range(len(points)):
+        for j in range(0, i+1):
+            if j != 0:
+                lowerTriM += ','
+            lowerTriM += str(distM[i][j])
+        lowerTriM += '\n'
+    p.stdin.write(lowerTriM)
+
+    out, err = p.communicate()
+
+    pd = []
+    for line in out.splitlines():
+        if line[:2] == ' [':
+            n = line[2:-1].split(',')
+            try:
+                pd.append( ( float(n[0]), float(n[1]) ) )
+            except:
+                pass
+    return set(pd)
+
+    # pd = []
+    # for line in out.split('\n'):
+        # line = line.split()
+        # if len(line) == 3:
+            # pd.append((float(line[1]), float(line[2])))
+    # return set(pd)
+
 def calPD(points):
     assert(len(points) > 0)
     str_data = json.dumps(points)
@@ -123,7 +156,7 @@ def calRepresentation(args):
                     bootstrap = ball
                 else:
                     bootstrap = random.sample(ball, b)
-                pd = calPD(bootstrap)
+                pd = calPD_RIPSER(bootstrap)
                 pds_at_r.append(pd)
         pds_all_r.append(pds_at_r)
     return pds_all_r
@@ -177,7 +210,7 @@ def kernel(points_list, radius, m, b, s):
                         bootstrap = ball
                     else:
                         bootstrap = random.sample(ball, b)
-                    pd = calPD(bootstrap)
+                    pd = calPD_RIPSER(bootstrap)
                     pds_at_r.append(pd)
             pds_all_r.append(pds_at_r)
         pds_all_r_list.append(pds_all_r)
@@ -198,12 +231,13 @@ def kernel(points_list, radius, m, b, s):
 def kernel_global(points_list):
     pd_list = []
     for X in points_list:
-        pd_list.append(calPD(X))
+        pd_list.append(calPD_RIPSER(X))
 
     k = np.zeros(shape=(len(points_list), len(points_list)), dtype='f8')
     for i in range(len(points_list)):
         for j in range(i, len(points_list)):
             l_bound = max(len(points_list[i]), len(points_list[j]))
+            print('calculating inner product of <{}, {}>'.format(i, j))
             inner_product = pd_inner(pd_list[i], pd_list[j], l_bound)
             k[i][j] = inner_product
             k[j][i] = inner_product
@@ -216,5 +250,5 @@ if __name__ == '__main__':
     p2 = np.loadtxt('./data/rect.xy', delimiter=',').tolist()
     p3 = np.loadtxt('./data/torus.xyz').tolist()
 
-    # print(kernel_global([p1,p2,p3]))
-    # print(kernel([p1,p2,p3], [20], 1, 300, 1))
+    print(kernel_global([p1,p2]))
+    print(kernel([p1,p2], [20], 1, 300, 1))
