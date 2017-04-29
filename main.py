@@ -29,5 +29,6 @@ if __name__ == '__main__':
     points2 = loadPoints('./DB/freeform_hunting_knife.mat')
     points3 = loadPoints('./DB/freeform_pan_long.mat')
 
-    k = smurph.kernel([points1, points2, points3], [0.1], 10, 50, 1)
+    k = smurph.kernelMP([points1, points2, points3], [0.1], 1, 100, 1)
     print(k)
+

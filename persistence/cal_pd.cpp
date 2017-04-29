@@ -41,8 +41,8 @@ int main(int argc, char** argv)  {
     Points points = read_points_from_json(str, point_dim);
 
 	int max_d = 2;
-    Filtration* filtration = new SparseRipsFiltration(points, max_d, 1/3);
-    //Filtration* filtration = new RipsFiltration(points, max_d);
+    //Filtration* filtration = new SparseRipsFiltration(points, max_d, 1.0/3);
+    Filtration* filtration = new RipsFiltration(points, max_d);
     PersistentHomology ph(filtration);
     PersistenceDiagram *pd = ph.compute_persistence();
 

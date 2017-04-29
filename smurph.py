@@ -4,6 +4,7 @@ import numpy as np
 import json
 import random
 
+from multiprocessing import Pool
 from subprocess import Popen, PIPE
 from scipy.integrate import quad
 from scipy.spatial import distance_matrix
@@ -99,6 +100,61 @@ def pointsInBall(points, metric_space, center_idx, r):
 
 ################################################################################
 # kernels
+
+def calRepresentation(args):
+    points = args[0]
+    metric_space = args[1]
+    radius = args[2]
+    m = args[3]
+    b = args[4]
+    s = args[5]
+    pointsID = args[6]
+
+    print('calculating representation for point cloud {}'.format(pointsID))
+    pds_all_r = []
+    for r in radius:
+        pds_at_r = []
+        for i in range(m):
+            center_idx = random.randint(0, len(points)-1)
+            for j in range(s):
+                ball = pointsInBall(points, metric_space, center_idx, r)
+                bootstrap = []
+                if len(ball) <= b:
+                    bootstrap = ball
+                else:
+                    bootstrap = random.sample(ball, b)
+                pd = calPD(bootstrap)
+                pds_at_r.append(pd)
+        pds_all_r.append(pds_at_r)
+    return pds_all_r
+
+# SMURPH kernel multiprocessing
+def kernelMP(points_list, radius, m, b, s):
+
+    p = Pool(4)
+    ms_list = [distance_matrix(X, X) for X in points_list]
+    args_list = zip(
+        points_list, ms_list,
+        [radius for i in range(len(points_list))],
+        [m for i in range(len(points_list))],
+        [b for i in range(len(points_list))],
+        [s for i in range(len(points_list))],
+        [i for i in range(len(points_list))]
+    )
+    pds_all_r_list = p.map(calRepresentation, args_list)
+
+    # calculate kernel
+    weights = [(radius[0] / r)**3 for r in radius]
+    k = np.zeros(shape=(len(points_list), len(points_list)), dtype='f8')
+    for i in range(len(points_list)):
+        for j in range(i, len(points_list)):
+            l_bound = s
+            print('calculating inner product of <{}, {}>'.format(i, j))
+            inner_product = pdsvec_inner(pds_all_r_list[i], pds_all_r_list[j], l_bound, weights)
+            k[i][j] = inner_product
+            k[j][i] = inner_product
+
+    return k
 
 # SMURPH kernel
 def kernel(points_list, radius, m, b, s):
