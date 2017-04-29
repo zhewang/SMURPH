@@ -31,7 +31,7 @@ def calculateKernelforDB():
     with open('./DB/list.txt', 'r') as f:
         for line in f.readlines():
             pc_list.append(loadPoints('./DB/'+line.rstrip('\n')))
-    k = smurph.kernelMP(pc_list, [0.1], 10, 100, 1)
+    k = smurph.kernelMP(pc_list, [0.1], 20, 350, 1)
     np.savetxt('kernel.txt', k)
 
 def plot2D(kernel):

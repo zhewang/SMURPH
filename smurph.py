@@ -57,6 +57,15 @@ def pdsvec_inner(pdsvec1, pdsvec2, l_bound, weights):
         result += w*f_inner(f1, f2, l_bound)
     return result
 
+def pdsvec_inner(pdsvec1, pdsvec2, l_bound, weights, idx):
+    assert(len(pdsvec1) == len(pdsvec2) == len(weights))
+    result = 0.0
+    for pds1, pds2, w in zip(pdsvec1, pdsvec2, weights):
+        f1 = lambda s, l : lfunc_multiscale(s, l, pds1)
+        f2 = lambda s, l : lfunc_multiscale(s, l, pds2)
+        result += w*f_inner(f1, f2, l_bound)
+    return (result, idx)
+
 def flist_inner(flist1, flist2, l_bound, weights):
     assert(len(flist1) == len(flist2) == len(weights))
     result = 0.0
@@ -164,7 +173,7 @@ def calRepresentation(args):
 # SMURPH kernel multiprocessing
 def kernelMP(points_list, radius, m, b, s):
 
-    p = Pool(4)
+    pool = Pool(4)
     ms_list = [distance_matrix(X, X) for X in points_list]
     args_list = zip(
         points_list, ms_list,
@@ -174,18 +183,26 @@ def kernelMP(points_list, radius, m, b, s):
         [s for i in range(len(points_list))],
         [i for i in range(len(points_list))]
     )
-    pds_all_r_list = p.map(calRepresentation, args_list)
+    pds_all_r_list = pool.map(calRepresentation, args_list)
 
     # calculate kernel
     weights = [(radius[0] / r)**3 for r in radius]
-    k = np.zeros(shape=(len(points_list), len(points_list)), dtype='f8')
+    inner_products = []
     for i in range(len(points_list)):
         for j in range(i, len(points_list)):
             l_bound = s
             print('calculating inner product of <{}, {}>'.format(i, j))
-            inner_product = pdsvec_inner(pds_all_r_list[i], pds_all_r_list[j], l_bound, weights)
-            k[i][j] = inner_product
-            k[j][i] = inner_product
+            result = pool.apply_async(pdsvec_inner, (pds_all_r_list[i], pds_all_r_list[j], l_bound, weights, (i,j)))
+            inner_products.append(result)
+
+    results = [res.get() for res in inner_products]
+    k = np.zeros(shape=(len(points_list), len(points_list)), dtype='f8')
+    for r in results:
+        value = r[0]
+        i, j = r[1]
+        k[i][j] = value
+        k[j][i] = value
+
 
     return k
 
@@ -250,5 +267,6 @@ if __name__ == '__main__':
     p2 = np.loadtxt('./data/rect.xy', delimiter=',').tolist()
     p3 = np.loadtxt('./data/torus.xyz').tolist()
 
-    print(kernel_global([p1,p2]))
-    print(kernel([p1,p2], [20], 1, 300, 1))
+    # print(kernel_global([p1,p2]))
+    # print(kernel([p1,p2,p3], [20], 1, 300, 1))
+    print(kernelMP([p1,p2,p3], [20], 1, 300, 1))
