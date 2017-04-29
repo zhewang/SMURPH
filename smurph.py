@@ -57,7 +57,7 @@ def pdsvec_inner(pdsvec1, pdsvec2, l_bound, weights):
         result += w*f_inner(f1, f2, l_bound)
     return result
 
-def pdsvec_inner(pdsvec1, pdsvec2, l_bound, weights, idx):
+def pdsvec_inner_indexed(pdsvec1, pdsvec2, l_bound, weights, idx):
     assert(len(pdsvec1) == len(pdsvec2) == len(weights))
     result = 0.0
     for pds1, pds2, w in zip(pdsvec1, pdsvec2, weights):
@@ -171,7 +171,7 @@ def calRepresentation(args):
     return pds_all_r
 
 # SMURPH kernel multiprocessing
-def kernelMP(points_list, radius, m, b, s):
+def kernelMP(points_list, radius, m, b, s, parallelEverything = False):
 
     pool = Pool(4)
     ms_list = [distance_matrix(X, X) for X in points_list]
@@ -186,23 +186,31 @@ def kernelMP(points_list, radius, m, b, s):
     pds_all_r_list = pool.map(calRepresentation, args_list)
 
     # calculate kernel
-    weights = [(radius[0] / r)**3 for r in radius]
-    inner_products = []
-    for i in range(len(points_list)):
-        for j in range(i, len(points_list)):
-            l_bound = s
-            print('calculating inner product of <{}, {}>'.format(i, j))
-            result = pool.apply_async(pdsvec_inner, (pds_all_r_list[i], pds_all_r_list[j], l_bound, weights, (i,j)))
-            inner_products.append(result)
-
-    results = [res.get() for res in inner_products]
     k = np.zeros(shape=(len(points_list), len(points_list)), dtype='f8')
-    for r in results:
-        value = r[0]
-        i, j = r[1]
-        k[i][j] = value
-        k[j][i] = value
+    weights = [(radius[0] / r)**3 for r in radius]
+    if parallelEverything is True:
+        inner_products = []
+        for i in range(len(points_list)):
+            for j in range(i, len(points_list)):
+                l_bound = s
+                print('calculating inner product of <{}, {}>'.format(i, j))
+                result = pool.apply_async(pdsvec_inner_indexed, (pds_all_r_list[i], pds_all_r_list[j], l_bound, weights, (i,j)))
+                inner_products.append(result)
 
+        results = [res.get() for res in inner_products]
+        for r in results:
+            value = r[0]
+            i, j = r[1]
+            k[i][j] = value
+            k[j][i] = value
+    else:
+        for i in range(len(points_list)):
+            for j in range(i, len(points_list)):
+                l_bound = s
+                print('calculating inner product of <{}, {}>'.format(i, j))
+                inner_product = pdsvec_inner(pds_all_r_list[i], pds_all_r_list[j], l_bound, weights)
+                k[i][j] = inner_product
+                k[j][i] = inner_product
 
     return k
 
