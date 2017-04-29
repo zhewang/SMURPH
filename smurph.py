@@ -67,8 +67,10 @@ def flist_inner(flist1, flist2, l_bound, weights):
 # helper functions
 
 def calPD(points):
+    assert(len(points) > 0)
     str_data = json.dumps(points)
-    p = Popen(['./persistence/bin/cal_pd', '2', str_data], stdout=PIPE)
+    dim = len(points[0])
+    p = Popen(['./persistence/bin/cal_pd', str(dim), str_data], stdout=PIPE)
     out, err = p.communicate()
 
     pd = []
@@ -103,7 +105,10 @@ def kernel(points_list, radius, m, b, s):
     pds_all_r_list = []
     ms_list = [distance_matrix(X, X) for X in points_list]
     weights = [(radius[0] / r)**3 for r in radius]
+    xcount = 0
     for X, metric_space in zip(points_list, ms_list):
+        print('calculating representation for point cloud {}'.format(xcount))
+        xcount += 1
         pds_all_r = []
         for r in radius:
             pds_at_r = []
@@ -125,7 +130,8 @@ def kernel(points_list, radius, m, b, s):
     k = np.zeros(shape=(len(points_list), len(points_list)), dtype='f8')
     for i in range(len(points_list)):
         for j in range(i, len(points_list)):
-            l_bound = max(len(points_list[i]), len(points_list[j]))
+            l_bound = s
+            print('calculating inner product of <{}, {}>'.format(i, j))
             inner_product = pdsvec_inner(pds_all_r_list[i], pds_all_r_list[j], l_bound, weights)
             k[i][j] = inner_product
             k[j][i] = inner_product

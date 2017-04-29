@@ -38,17 +38,17 @@ int main(int argc, char** argv)  {
     }
     int point_dim = std::stoi(argv[1]);
     std::string str = argv[2];
-    Points points = read_points_from_json(str, 2);
+    Points points = read_points_from_json(str, point_dim);
 
 	int max_d = 2;
-    Filtration* sparse_filtration = new SparseRipsFiltration(points, max_d, 1.0/3);
-    //Filtration* full_filtration = new RipsFiltration(points, max_d);
-    PersistentHomology sparse_rips_homology(sparse_filtration);
-    PersistenceDiagram *sparse_rips_pd = sparse_rips_homology.compute_persistence();
+    Filtration* filtration = new SparseRipsFiltration(points, max_d, 0.1/3);
+    //Filtration* filtration = new RipsFiltration(points, max_d);
+    PersistentHomology ph(filtration);
+    PersistenceDiagram *pd = ph.compute_persistence();
 
-    sparse_rips_pd->sort_pairs_by_persistence();
-    for(unsigned i = 0; i < sparse_rips_pd->num_pairs(); i++)  {
-        PersistentPair pairing = sparse_rips_pd->get_pair(i);
+    pd->sort_pairs_by_persistence();
+    for(unsigned i = 0; i < pd->num_pairs(); i++)  {
+        PersistentPair pairing = pd->get_pair(i);
         printf("%u %.7f %.7f\n", pairing.dim(), pairing.birth_time(), pairing.death_time());
     }
 }
