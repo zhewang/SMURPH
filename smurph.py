@@ -158,6 +158,7 @@ if __name__ == '__main__':
 
     p1 = np.loadtxt('./data/mesh.xy', delimiter=',').tolist()
     p2 = np.loadtxt('./data/rect.xy', delimiter=',').tolist()
+    p3 = np.loadtxt('./data/torus.xyz').tolist()
 
-    print(kernel_global([p1,p2]))
-    print(kernel([p1,p2], [20], 1, 300, 1))
+    # print(kernel_global([p1,p2,p3]))
+    # print(kernel([p1,p2,p3], [20], 1, 300, 1))
