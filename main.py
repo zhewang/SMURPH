@@ -23,12 +23,15 @@ def loadPoints(fpath):
 
     return points
 
+# calculate kernel for FirstMM_object_data
+def calculateKernelforDB():
+    pc_list = []
+    with open('./DB/list.txt', 'r') as f:
+        for line in f.readlines():
+            pc_list.append(loadPoints('./DB/'+line.rstrip('\n')))
+    k = smurph.kernelMP(pc_list, [0.1], 10, 100, 1)
+    np.savetxt('kernel_DB_10_100.txt', k)
+
 
 if __name__ == '__main__':
-    points1 = loadPoints('./DB/freeform_beer_bottle.mat')
-    points2 = loadPoints('./DB/freeform_hunting_knife.mat')
-    points3 = loadPoints('./DB/freeform_pan_long.mat')
-
-    k = smurph.kernelMP([points1, points2, points3], [0.1], 1, 100, 1)
-    print(k)
-
+    calculateKernelforDB()
