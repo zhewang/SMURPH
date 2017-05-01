@@ -74,7 +74,53 @@ def dataset_diffHoles():
         points_list.append(points)
         classes.append(4)
 
-    return points_list, classes
+    # style book
+    holes = {0: 'o', 1: '^', 2: 's', 3: 'p'}
+    holeSize = {'s':'#ffffb2', 'm': '#fecc5c' , 'l': '#fd8d3c', 'xl': '#e31a1c'}
+    markers = [
+        holes[0],
+        holes[0],
+        holes[0],
+        holes[0],
+
+        holes[1],
+        holes[1],
+        holes[1],
+        holes[1],
+
+        holes[2],
+        holes[2],
+        holes[2],
+        holes[2],
+
+        holes[3],
+        holes[3],
+        holes[3],
+        holes[3]
+    ]
+    colors = [
+        holeSize['s'],
+        holeSize['m'],
+        holeSize['l'],
+        holeSize['xl'],
+
+        holeSize['s'],
+        holeSize['m'],
+        holeSize['l'],
+        holeSize['xl'],
+
+        holeSize['s'],
+        holeSize['m'],
+        holeSize['l'],
+        holeSize['xl'],
+
+        holeSize['s'],
+        holeSize['m'],
+        holeSize['l'],
+        holeSize['xl']
+    ]
+
+    return points_list, markers, colors
 
 def dataset_multiscale():
     points_list = []
@@ -257,15 +303,12 @@ def exp_DB_linear():
     plot2D(kernel, classes, markers, colors)
 
 def exp_multiholes():
-    points_list, classes = dataset_diffHoles()
-    k = smurph.kernelMP(points_list, [10], 5, 2000, 1)
-    np.savetxt('kernel.txt', k)
+    points_list, markers, colors = dataset_diffHoles()
+    # k = smurph.kernelMP(points_list, [10], 5, 2000, 1)
+    # np.savetxt('kernel.txt', k)
 
     k = np.loadtxt('kernel.txt')
-    markers = {1:'^', 2:'h', 3:'8', 4:'*', 5:'D', 6:'o', 7:'s'}
-    colors = { 1:'#e41a1c',2:'#377eb8',3:'#4daf4a',4:'#984ea3',
-              5:'#ff7f00',6:'#ffff33',7:'#a65628'}
-    plot2D(k, classes, markers, colors)
+    plot2D(k, markers, colors)
 
 def exp_multiscale():
     points_list, markers, colors = dataset_multiscale()
@@ -280,5 +323,5 @@ def exp_multiscale():
 if __name__ == '__main__':
     # exp_DB()
     # exp_DB_linear()
-    # exp_multiholes()
-    exp_multiscale()
+    exp_multiholes()
+    # exp_multiscale()
