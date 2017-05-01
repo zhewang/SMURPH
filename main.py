@@ -262,7 +262,7 @@ def plot2D(kernel, markers, colors):
     y = result[:,1]
 
     for xp, yp, m, c in zip(x, y, markers, colors):
-        plt.scatter(xp, yp, marker=m, c=c)
+        plt.scatter(xp, yp, marker=m, c=c, alpha = 0.6)
     plt.show()
 
 def exp_DB():
@@ -276,18 +276,23 @@ def exp_DB():
         3,7,6,6,3, 3,6,5,5,5, 7,7,7,7,3,
         3,3,3,3,3, 3,7,3,3,1, 6
     ])
-    markers = {1:'^', 2:'h', 3:'8', 4:'*', 5:'D', 6:'o', 7:'s'}
-    colors = { 1:'#e41a1c',2:'#377eb8',3:'#4daf4a',4:'#984ea3',
+    # markers = {1:'^', 2:'h', 3:'8', 4:'*', 5:'D', 6:'o', 7:'s'}
+    markers = ['o' for i in range(len(classes))]
+    colors_map = { 1:'#e41a1c',2:'#377eb8',3:'#4daf4a',4:'#984ea3',
               5:'#ff7f00',6:'#ffff33',7:'#a65628'}
-    plot2D(kernel, classes, markers, colors)
+    colors = []
+    for c in classes:
+        colors.append(colors_map[c])
+
+    plot2D(kernel, markers, colors)
 
 def exp_DB_linear():
     pc_list = []
     with open('./DB/list.txt', 'r') as f:
         for line in f.readlines():
             pc_list.append(loadPoints('./DB/'+line.rstrip('\n')))
-    k = linear.kernel(pc_list, 100)
-    np.savetxt('kernel_linear.txt', k)
+    # k = linear.kernel(pc_list, 100)
+    # np.savetxt('kernel_linear.txt', k)
 
     kernel = np.loadtxt('kernel_linear.txt')
     # 1: long bottle, 2: bowl, 3: knife; 4: small can; 5:mug, 6:glass
@@ -297,10 +302,14 @@ def exp_DB_linear():
         3,7,6,6,3, 3,6,5,5,5, 7,7,7,7,3,
         3,3,3,3,3, 3,7,3,3,1, 6
     ])
-    markers = {1:'^', 2:'h', 3:'8', 4:'*', 5:'D', 6:'o', 7:'s'}
-    colors = { 1:'#e41a1c',2:'#377eb8',3:'#4daf4a',4:'#984ea3',
+    # markers = {1:'^', 2:'h', 3:'8', 4:'*', 5:'D', 6:'o', 7:'s'}
+    markers = ['o' for i in range(len(classes))]
+    colors_map = { 1:'#e41a1c',2:'#377eb8',3:'#4daf4a',4:'#984ea3',
               5:'#ff7f00',6:'#ffff33',7:'#a65628'}
-    plot2D(kernel, classes, markers, colors)
+    colors = []
+    for c in classes:
+        colors.append(colors_map[c])
+    plot2D(kernel, markers, colors)
 
 def exp_multiholes():
     points_list, markers, colors = dataset_diffHoles()
@@ -321,7 +330,7 @@ def exp_multiscale():
 
 
 if __name__ == '__main__':
-    # exp_DB()
+    exp_DB()
     # exp_DB_linear()
-    exp_multiholes()
+    # exp_multiholes()
     # exp_multiscale()
