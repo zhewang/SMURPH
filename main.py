@@ -78,8 +78,6 @@ def dataset_diffHoles():
 
 def dataset_multiscale():
     points_list = []
-    classes = []
-    labels = []
 
     points = []
     step = 0.3
@@ -89,8 +87,6 @@ def dataset_multiscale():
                 points.append((i, j))
 
     points_list.append(points)
-    classes.append(1)
-    labels.append('o,s,1')
 
     # generate centers
     center_count = 32
@@ -109,8 +105,6 @@ def dataset_multiscale():
             points.append(p)
 
     points_list.append(points)
-    classes.append(2)
-    labels.append('o,h,1')
 
     # double the above two
     doubled_list = []
@@ -120,7 +114,6 @@ def dataset_multiscale():
             new_points.append(p)
             new_points.append( (p[0]+40, p[1]))
         doubled_list.append(new_points)
-        classes.append(3)
 
 
     # scale the above four
@@ -131,9 +124,62 @@ def dataset_multiscale():
             for p in points:
                 scaled.append( [x*alpha for x in p] )
             scaled_list.append(scaled)
-            classes.append(4)
 
-    return points_list+scaled_list+doubled_list, classes
+    final_list = points_list+scaled_list+doubled_list
+
+    # shape: O: ^, OO: *
+    # scale: L-M-S:
+    #    solid :#2ca25f, #99d8c9, #e5f5f9
+    #    dotted:#e34a33, #fdbb84, #fee8c8
+    shape = {'o': '^', 'oo': '*'}
+    scale = {
+        'solid-L': '#2ca25f', 'solid-M': '#99d8c9', 'solid-S': '#e5f5f9', # green
+        'dotted-L': '#e34a33', 'dotted-M': '#fdbb84', 'dotted-S': '#fee8c8' # red
+    }
+
+    markers = [
+        shape['o'],
+        shape['o'],
+
+        shape['o'],
+        shape['o'],
+        shape['o'],
+        shape['o'],
+
+        shape['oo'],
+        shape['oo'],
+        shape['oo'],
+        shape['oo'],
+
+        shape['oo'],
+        shape['oo'],
+    ]
+    colors = [
+        scale['solid-L'],
+        scale['dotted-L'],
+
+        scale['solid-M'],
+        scale['solid-S'],
+        scale['dotted-M'],
+        scale['dotted-S'],
+
+        scale['solid-M'],
+        scale['solid-S'],
+        scale['dotted-M'],
+        scale['dotted-S'],
+
+        scale['solid-L'],
+        scale['dotted-L'],
+    ]
+
+    # markers.append()
+    # colors.append()
+
+    # for points in final_list:
+        # plotPoints(points)
+
+
+    return final_list, markers, colors
 
 
 ################################################################################
@@ -163,14 +209,14 @@ def calculateKernelforDB():
     k = smurph.kernelMP(pc_list, [0.1], 10, 100, 1)
     np.savetxt('kernel.txt', k)
 
-def plot2D(kernel, classes, markers, colors):
+def plot2D(kernel, markers, colors):
     U, s, V = np.linalg.svd(kernel, full_matrices=True)
     result = U.dot(np.diag(np.sqrt(s)))
     x = result[:,0]
     y = result[:,1]
 
-    for xp, yp, c in zip(x, y, classes):
-        plt.scatter(xp, yp, marker=markers[c], c=colors[c])
+    for xp, yp, m, c in zip(x, y, markers, colors):
+        plt.scatter(xp, yp, marker=m, c=c)
     plt.show()
 
 def exp_DB():
@@ -222,16 +268,13 @@ def exp_multiholes():
     plot2D(k, classes, markers, colors)
 
 def exp_multiscale():
-    points_list, classes = dataset_multiscale()
+    points_list, markers, colors = dataset_multiscale()
 
-    k = smurph.kernelMP(points_list, [50], 5, 300, 1)
+    k = smurph.kernelMP(points_list, [40, 10, 5], 5, 300, 1)
     np.savetxt('kernel.txt', k)
 
     k = np.loadtxt('kernel.txt')
-    markers = {1:'^', 2:'h', 3:'8', 4:'*', 5:'D', 6:'o', 7:'s'}
-    colors = { 1:'#e41a1c',2:'#377eb8',3:'#4daf4a',4:'#984ea3',
-              5:'#ff7f00',6:'#ffff33',7:'#a65628'}
-    plot2D(k, classes, markers, colors)
+    plot2D(k, markers, colors)
 
 
 if __name__ == '__main__':
