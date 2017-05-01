@@ -75,6 +75,10 @@ def dataset_diffHoles():
 
     return points_list, classes
 
+def dataset_multiscale():
+    pass
+
+################################################################################
 
 # load FirstMM_object_data [M. Neumann 2013]
 def loadPoints(fpath):
@@ -148,14 +152,19 @@ def exp_DB_linear():
               5:'#ff7f00',6:'#ffff33',7:'#a65628'}
     plot2D(kernel, classes, markers, colors)
 
+def exp_multiholes():
+    points_list, classes = dataset_diffHoles()
+    k = smurph.kernelMP(points_list, [10], 5, 2000, 1)
+    np.savetxt('kernel.txt', k)
+
+    k = np.loadtxt('kernel.txt')
+    markers = {1:'^', 2:'h', 3:'8', 4:'*', 5:'D', 6:'o', 7:'s'}
+    colors = { 1:'#e41a1c',2:'#377eb8',3:'#4daf4a',4:'#984ea3',
+              5:'#ff7f00',6:'#ffff33',7:'#a65628'}
+    plot2D(k, classes, markers, colors)
+
 
 if __name__ == '__main__':
     # exp_DB()
     # exp_DB_linear()
-    points_list, classes = dataset_diffHoles()
-    k = smurph.kernelMP(points_list, [40,20,10], 20, 100, 1)
-    markers = {1:'^', 2:'h', 3:'8', 4:'*', 5:'D', 6:'o', 7:'s'}
-    colors = { 1:'#e41a1c',2:'#377eb8',3:'#4daf4a',4:'#984ea3',
-              5:'#ff7f00',6:'#ffff33',7:'#a65628'}
-    plot2D(kernel, classes, markers, colors)
-
+    exp_multiholes()
