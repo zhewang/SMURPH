@@ -1,0 +1,16 @@
+\begin{thebibliography}{1}
+
+\bibitem{zhu2016stochastic}
+Xiaojin Zhu, Ara Vartanian, Manish Bansal, Duy Nguyen, and Luke Brandl.
+\newblock Stochastic multiresolution persistent homology kernel.
+\newblock In {\em International Joint Conference on Artificial Intelligence},
+  2016.
+
+\bibitem{Neumann13mlg}
+M.~Neumann, P.~Moreno, L.~Antanas, R.~Garnett, and K.~Kersting.
+\newblock {Graph Kernels for Object Category Prediction in Task-Dependent Robot
+  Grasping}.
+\newblock In {\em Proceedings of the Eleventh Workshop on Mining and Learning
+  with Graphs (MLG{--}2013)}, Chicago, US, 2013.
+
+\end{thebibliography}
