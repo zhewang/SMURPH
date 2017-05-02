@@ -1,5 +1,6 @@
 import random
 import math
+from collections import OrderedDict
 
 import scipy.io as sio
 import matplotlib.pyplot as plt
@@ -7,6 +8,7 @@ import numpy as np
 
 from scipy.spatial.distance import euclidean
 from sklearn.decomposition import KernelPCA
+from mpl_toolkits.mplot3d import Axes3D
 
 import smurph
 import linear
@@ -142,14 +144,22 @@ def loadPoints(fpath):
 
     return points
 
-def plot2D(kernel, markers, colors):
+def plot2D(kernel, markers, colors, labels=None):
     U, s, V = np.linalg.svd(kernel, full_matrices=True)
     result = U.dot(np.diag(np.sqrt(s)))
     x = result[:,0]
     y = result[:,1]
 
-    for xp, yp, m, c in zip(x, y, markers, colors):
-        plt.scatter(xp, yp, marker=m, c=c, alpha = 0.6)
+    if labels is None:
+        for xp, yp, m, c in zip(x, y, markers, colors):
+            plt.scatter(xp, yp, marker=m, c=c, alpha = 0.8)
+    else:
+        for xp, yp, m, c, l in zip(x, y, markers, colors, labels):
+            plt.scatter(xp, yp, marker=m, c=c, alpha = 0.8, label=l)
+        handles, labels = plt.gca().get_legend_handles_labels()
+        by_label = OrderedDict(zip(labels, handles))
+        plt.legend(by_label.values(), by_label.keys())
+        # plt.legend()
     plt.show()
 
 def exp_DB(kernelfunc, args):
@@ -190,18 +200,23 @@ def plot2DPCA_DB(kernel_file_path):
     markers = ['o' for i in range(len(classes))]
     colors_map = { 1:'#e41a1c',2:'#377eb8',3:'#4daf4a',4:'#984ea3',
               5:'#ff7f00',6:'#ffff33',7:'#a65628'}
+
+    label_map ={ 1: 'long bottle', 2: 'bowl', 3: 'knife', 4: 'small can',
+                 5:'mug', 6:'wine glass', 7: 'pan with handle' }
     colors = []
+    labels = []
     for c in classes:
         colors.append(colors_map[c])
+        labels.append(label_map[c])
 
-    plot2D(kernel, markers, colors)
+    plot2D(kernel, markers, colors, labels)
 
 def plot2DPCA_Multiholes(kernel_file_path):
-    k = np.loadtxt('kernel.txt')
+    k = np.loadtxt(kernel_file_path)
 
     # style book
     holes = {0: 'o', 1: '^', 2: 's', 3: 'p'}
-    holeSize = {'s':'#ffffb2', 'm': '#fecc5c' , 'l': '#fd8d3c', 'xl': '#e31a1c'}
+    holeSize = {'s':'#e41a1c', 'm': '#377eb8' , 'l': '#4daf4a', 'xl': '#984ea3'}
     markers = [
         holes[0],holes[0],holes[0],holes[0],
         holes[1],holes[1],holes[1],holes[1],
@@ -217,7 +232,7 @@ def plot2DPCA_Multiholes(kernel_file_path):
     plot2D(k, markers, colors)
 
 def plot2DPCA_Multiscale(kernel_file_path):
-    k = np.loadtxt('kernel.txt')
+    k = np.loadtxt(kernel_file_path)
 
     # shape: O: ^, OO: *
     # scale: L-M-S:
@@ -241,19 +256,31 @@ def plot2DPCA_Multiscale(kernel_file_path):
         scale['solid-M'],scale['solid-S'],scale['dotted-M'],scale['dotted-S'],
         scale['solid-L'],scale['dotted-L'],
     ]
-    plot2D(k, markers, colors)
+    labels = [
+        'O-Solid-L', 'O-Holes-L',
+        'O-Solid-M', 'O-Solid-S', 'O-Holes-M', 'O-Holes-S',
+        'OO-Solid-M', 'OO-Solid-S', 'OO-Holes-M', 'OO-Holes-S',
+        'OO-Solid-L', 'OO-Holes-L'
+    ]
+    plot2D(k, markers, colors, labels)
 
 ################################################################################
 
 if __name__ == '__main__':
     # exp_DB(hod.kernel, args = ())
-    # exp_DB(linear.kernel, args = (2000,))
+    # exp_DB(linear.kernel, args = (100,))
     # exp_DB(smurph.kernelMP, args=([0.1], 10, 100, 1))
-    # plot2DPCA_DB('kernel_DB_10_100.txt')
+    plot2DPCA_DB('kernel_DB_10_100.txt')
     # plot2DPCA_DB('kernel_DB_20_350.txt')
+    # plot2DPCA_DB('kernel.txt')
 
+    # exp_multiholes(linear.kernel, args = (100,))
     # exp_multiholes(hod.kernel, args = ())
+    # exp_DB(smurph.kernelMP, args=([40,20,10], 20, 100, 1))
     # plot2DPCA_Multiholes('kernel_multiholes_[40_20_10]_20_100.txt')
+    # plot2DPCA_Multiholes('kernel.txt')
 
-    exp_multiscale(hod.kernel, args = ())
+    # exp_multiscale(hod.kernel, args = ())
+    # exp_multiscale(linear.kernel, args = (100,))
     # plot2DPCA_Multiscale('kernel_multiscale_[40_10_5]_5_300_1.txt')
+    # plot2DPCA_Multiscale('kernel.txt')
