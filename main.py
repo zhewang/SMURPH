@@ -156,10 +156,15 @@ def plot2D(kernel, markers, colors, labels=None):
     else:
         for xp, yp, m, c, l in zip(x, y, markers, colors, labels):
             plt.scatter(xp, yp, marker=m, c=c, alpha = 0.8, label=l)
+
         handles, labels = plt.gca().get_legend_handles_labels()
-        by_label = OrderedDict(zip(labels, handles))
-        plt.legend(by_label.values(), by_label.keys())
-        # plt.legend()
+        sorted_handles = []
+        sorted_labels = []
+        for key, value in sorted(zip(labels, handles)):
+            sorted_labels.append(key)
+            sorted_handles.append(value)
+        plt.legend(sorted_handles, sorted_labels)
+
     plt.show()
 
 def exp_DB(kernelfunc, args):
@@ -270,7 +275,7 @@ if __name__ == '__main__':
     # exp_DB(hod.kernel, args = ())
     # exp_DB(linear.kernel, args = (100,))
     # exp_DB(smurph.kernelMP, args=([0.1], 10, 100, 1))
-    plot2DPCA_DB('kernel_DB_10_100.txt')
+    # plot2DPCA_DB('kernel_DB_10_100.txt')
     # plot2DPCA_DB('kernel_DB_20_350.txt')
     # plot2DPCA_DB('kernel.txt')
 
@@ -282,5 +287,5 @@ if __name__ == '__main__':
 
     # exp_multiscale(hod.kernel, args = ())
     # exp_multiscale(linear.kernel, args = (100,))
-    # plot2DPCA_Multiscale('kernel_multiscale_[40_10_5]_5_300_1.txt')
+    plot2DPCA_Multiscale('kernel_multiscale_[40_10_5]_5_300_1.txt')
     # plot2DPCA_Multiscale('kernel.txt')
