@@ -10,6 +10,7 @@ from sklearn.decomposition import KernelPCA
 
 import smurph
 import linear
+import hod
 
 
 def plotPoints(points):
@@ -32,7 +33,6 @@ def dataset_diffHoles():
 
     radius = [2,3,4,5]
     points_list = []
-    classes = []
 
     # bites
     center = (20, 0)
@@ -42,7 +42,6 @@ def dataset_diffHoles():
             if euclidean(p, center) > r:
                 points.append(p)
         points_list.append(points)
-        classes.append(1)
 
     # 1 hole
     center = (20, 20)
@@ -52,7 +51,6 @@ def dataset_diffHoles():
             if euclidean(p, center) > r:
                 points.append(p)
         points_list.append(points)
-        classes.append(2)
 
     # 2 holes
     centers = [(10, 20), (30, 20)]
@@ -62,7 +60,6 @@ def dataset_diffHoles():
             if euclidean(p, centers[0]) > r and euclidean(p, centers[1]) > r:
                 points.append(p)
         points_list.append(points)
-        classes.append(3)
 
     # 3 holes
     centers = [(12, 12), (20, 30), (28, 12)]
@@ -72,55 +69,8 @@ def dataset_diffHoles():
             if euclidean(p, centers[0]) > r and euclidean(p, centers[1]) > r and euclidean(p, centers[2]) > r:
                 points.append(p)
         points_list.append(points)
-        classes.append(4)
 
-    # style book
-    holes = {0: 'o', 1: '^', 2: 's', 3: 'p'}
-    holeSize = {'s':'#ffffb2', 'm': '#fecc5c' , 'l': '#fd8d3c', 'xl': '#e31a1c'}
-    markers = [
-        holes[0],
-        holes[0],
-        holes[0],
-        holes[0],
-
-        holes[1],
-        holes[1],
-        holes[1],
-        holes[1],
-
-        holes[2],
-        holes[2],
-        holes[2],
-        holes[2],
-
-        holes[3],
-        holes[3],
-        holes[3],
-        holes[3]
-    ]
-    colors = [
-        holeSize['s'],
-        holeSize['m'],
-        holeSize['l'],
-        holeSize['xl'],
-
-        holeSize['s'],
-        holeSize['m'],
-        holeSize['l'],
-        holeSize['xl'],
-
-        holeSize['s'],
-        holeSize['m'],
-        holeSize['l'],
-        holeSize['xl'],
-
-        holeSize['s'],
-        holeSize['m'],
-        holeSize['l'],
-        holeSize['xl']
-    ]
-
-    return points_list, markers, colors
+    return points_list
 
 def dataset_multiscale():
     points_list = []
@@ -172,61 +122,7 @@ def dataset_multiscale():
             scaled_list.append(scaled)
 
     final_list = points_list+scaled_list+doubled_list
-
-    # shape: O: ^, OO: *
-    # scale: L-M-S:
-    #    solid :#2ca25f, #99d8c9, #e5f5f9
-    #    dotted:#e34a33, #fdbb84, #fee8c8
-    shape = {'o': '^', 'oo': '*'}
-    scale = {
-        'solid-L': '#2ca25f', 'solid-M': '#99d8c9', 'solid-S': '#e5f5f9', # green
-        'dotted-L': '#e34a33', 'dotted-M': '#fdbb84', 'dotted-S': '#fee8c8' # red
-    }
-
-    markers = [
-        shape['o'],
-        shape['o'],
-
-        shape['o'],
-        shape['o'],
-        shape['o'],
-        shape['o'],
-
-        shape['oo'],
-        shape['oo'],
-        shape['oo'],
-        shape['oo'],
-
-        shape['oo'],
-        shape['oo'],
-    ]
-    colors = [
-        scale['solid-L'],
-        scale['dotted-L'],
-
-        scale['solid-M'],
-        scale['solid-S'],
-        scale['dotted-M'],
-        scale['dotted-S'],
-
-        scale['solid-M'],
-        scale['solid-S'],
-        scale['dotted-M'],
-        scale['dotted-S'],
-
-        scale['solid-L'],
-        scale['dotted-L'],
-    ]
-
-    # markers.append()
-    # colors.append()
-
-    # for points in final_list:
-        # plotPoints(points)
-
-
-    return final_list, markers, colors
-
+    return final_list
 
 ################################################################################
 
@@ -246,15 +142,6 @@ def loadPoints(fpath):
 
     return points
 
-# calculate kernel for FirstMM_object_data
-def calculateKernelforDB():
-    pc_list = []
-    with open('./DB/list.txt', 'r') as f:
-        for line in f.readlines():
-            pc_list.append(loadPoints('./DB/'+line.rstrip('\n')))
-    k = smurph.kernelMP(pc_list, [0.1], 10, 100, 1)
-    np.savetxt('kernel.txt', k)
-
 def plot2D(kernel, markers, colors):
     U, s, V = np.linalg.svd(kernel, full_matrices=True)
     result = U.dot(np.diag(np.sqrt(s)))
@@ -265,36 +152,33 @@ def plot2D(kernel, markers, colors):
         plt.scatter(xp, yp, marker=m, c=c, alpha = 0.6)
     plt.show()
 
-def exp_DB():
-    # calculateKernelforDB()
-
-    kernel = np.loadtxt('kernel.txt')
-    # 1: long bottle, 2: bowl, 3: knife; 4: small can; 5:mug, 6:glass
-    # 7: pan with handle
-    classes = np.array([
-        1,1,2,2,2, 3,3,3,3,4, 4,4,1,3,6,
-        3,7,6,6,3, 3,6,5,5,5, 7,7,7,7,3,
-        3,3,3,3,3, 3,7,3,3,1, 6
-    ])
-    # markers = {1:'^', 2:'h', 3:'8', 4:'*', 5:'D', 6:'o', 7:'s'}
-    markers = ['o' for i in range(len(classes))]
-    colors_map = { 1:'#e41a1c',2:'#377eb8',3:'#4daf4a',4:'#984ea3',
-              5:'#ff7f00',6:'#ffff33',7:'#a65628'}
-    colors = []
-    for c in classes:
-        colors.append(colors_map[c])
-
-    plot2D(kernel, markers, colors)
-
-def exp_DB_linear():
+def exp_DB(kernelfunc, args):
     pc_list = []
     with open('./DB/list.txt', 'r') as f:
         for line in f.readlines():
             pc_list.append(loadPoints('./DB/'+line.rstrip('\n')))
-    # k = linear.kernel(pc_list, 100)
-    # np.savetxt('kernel_linear.txt', k)
+    # k = kernelfunc(pc_list, [0.1], 10, 100, 1)
+    k = kernelfunc(pc_list, *args)
+    np.savetxt('kernel.txt', k)
 
-    kernel = np.loadtxt('kernel_linear.txt')
+
+def exp_multiholes(kernelfunc, args):
+    points_list = dataset_diffHoles()
+    k = kernelfunc(points_list, *args)
+    # k = kernelfunc(points_list, [10], 5, 2000, 1)
+    np.savetxt('kernel.txt', k)
+
+def exp_multiscale(kernelfunc, args):
+    points_list = dataset_multiscale()
+    k = kernelfunc(points_list, *args)
+    # k = smurph.kernelMP(points_list, [40, 10, 5], 5, 300, 1)
+    # k = hod.kernel(points_list)
+    np.savetxt('kernel.txt', k)
+
+################################################################################
+
+def plot2DPCA_DB(kernel_file_path):
+    kernel = np.loadtxt(kernel_file_path)
     # 1: long bottle, 2: bowl, 3: knife; 4: small can; 5:mug, 6:glass
     # 7: pan with handle
     classes = np.array([
@@ -309,28 +193,67 @@ def exp_DB_linear():
     colors = []
     for c in classes:
         colors.append(colors_map[c])
+
     plot2D(kernel, markers, colors)
 
-def exp_multiholes():
-    points_list, markers, colors = dataset_diffHoles()
-    # k = smurph.kernelMP(points_list, [10], 5, 2000, 1)
-    # np.savetxt('kernel.txt', k)
-
+def plot2DPCA_Multiholes(kernel_file_path):
     k = np.loadtxt('kernel.txt')
+
+    # style book
+    holes = {0: 'o', 1: '^', 2: 's', 3: 'p'}
+    holeSize = {'s':'#ffffb2', 'm': '#fecc5c' , 'l': '#fd8d3c', 'xl': '#e31a1c'}
+    markers = [
+        holes[0],holes[0],holes[0],holes[0],
+        holes[1],holes[1],holes[1],holes[1],
+        holes[2],holes[2],holes[2],holes[2],
+        holes[3],holes[3],holes[3],holes[3]
+    ]
+    colors = [
+        holeSize['s'],holeSize['m'],holeSize['l'],holeSize['xl'],
+        holeSize['s'],holeSize['m'],holeSize['l'],holeSize['xl'],
+        holeSize['s'],holeSize['m'],holeSize['l'],holeSize['xl'],
+        holeSize['s'],holeSize['m'],holeSize['l'],holeSize['xl']
+    ]
     plot2D(k, markers, colors)
 
-def exp_multiscale():
-    points_list, markers, colors = dataset_multiscale()
-
-    k = smurph.kernelMP(points_list, [40, 10, 5], 5, 300, 1)
-    np.savetxt('kernel.txt', k)
-
+def plot2DPCA_Multiscale(kernel_file_path):
     k = np.loadtxt('kernel.txt')
+
+    # shape: O: ^, OO: *
+    # scale: L-M-S:
+    #    solid :#2ca25f, #99d8c9, #e5f5f9
+    #    dotted:#e34a33, #fdbb84, #fee8c8
+    shape = {'o': '^', 'oo': '*'}
+    scale = {
+        'solid-L': '#2ca25f', 'solid-M': '#99d8c9', 'solid-S': '#e5f5f9', # green
+        'dotted-L': '#e34a33', 'dotted-M': '#fdbb84', 'dotted-S': '#fee8c8' # red
+    }
+
+    markers = [
+        shape['o'],shape['o'],
+        shape['o'],shape['o'],shape['o'],shape['o'],
+        shape['oo'],shape['oo'],shape['oo'],shape['oo'],
+        shape['oo'],shape['oo'],
+    ]
+    colors = [
+        scale['solid-L'],scale['dotted-L'],
+        scale['solid-M'],scale['solid-S'],scale['dotted-M'],scale['dotted-S'],
+        scale['solid-M'],scale['solid-S'],scale['dotted-M'],scale['dotted-S'],
+        scale['solid-L'],scale['dotted-L'],
+    ]
     plot2D(k, markers, colors)
 
+################################################################################
 
 if __name__ == '__main__':
-    exp_DB()
-    # exp_DB_linear()
-    # exp_multiholes()
-    # exp_multiscale()
+    # exp_DB(hod.kernel, args = ())
+    # exp_DB(linear.kernel, args = (2000,))
+    # exp_DB(smurph.kernelMP, args=([0.1], 10, 100, 1))
+    # plot2DPCA_DB('kernel_DB_10_100.txt')
+    # plot2DPCA_DB('kernel_DB_20_350.txt')
+
+    # exp_multiholes(hod.kernel, args = ())
+    # plot2DPCA_Multiholes('kernel_multiholes_[40_20_10]_20_100.txt')
+
+    exp_multiscale(hod.kernel, args = ())
+    # plot2DPCA_Multiscale('kernel_multiscale_[40_10_5]_5_300_1.txt')
