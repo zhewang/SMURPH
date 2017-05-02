@@ -234,7 +234,13 @@ def plot2DPCA_Multiholes(kernel_file_path):
         holeSize['s'],holeSize['m'],holeSize['l'],holeSize['xl'],
         holeSize['s'],holeSize['m'],holeSize['l'],holeSize['xl']
     ]
-    plot2D(k, markers, colors)
+    labels = [
+        '0-S', '0-M', '0-L', '0-XL',
+        '1-S', '1-M', '1-L', '1-XL',
+        '2-S', '2-M', '2-L', '2-XL',
+        '3-S', '3-M', '3-L', '3-XL',
+    ]
+    plot2D(k, markers, colors, labels)
 
 def plot2DPCA_Multiscale(kernel_file_path):
     k = np.loadtxt(kernel_file_path)

@@ -243,7 +243,7 @@ There are totally 16 different point clouds in this dataset.
 The SMURPH kernel claims to be capable of doing multiresolution analysis.
 So I designed this dataset to evaluate this ability.
 Figure ~\ref{fig:multiscale_dataset} shows a few samples.
-The dataset basically have two shapes of data: ``O" and ``$\infty$".
+The dataset basically have two shapes of data: O-shaped and $\infty$-shaped.
 Each shape could be consist of solid ribbons, or ribbons with small holes.
 These four point clouds, as Figure ~\ref{fig:multiscale_dataset} shows, forms a set.
 There are 3 sets in this dataset with size $40 \times 40$, $25 \times 25$, and $8 \times 8$.
@@ -278,6 +278,10 @@ Specifically, in the original paper, they used a radius of $r = 0.1$, $m = 20$ c
 In my experiment, I used a radius of $r = 0.1$, $m = 10$ centers per point cloud, $s = 1$ samples per center, and a budget of $b = 100$ points per sample.
 The comparison is shown in Figure ~\ref{fig:smurph_compare}.
 As we can see, the overall distribution of my implementation is very close to the result from original paper.
+The only noticable difference is that the small cans don't form a cluster in my implementation.
+This probably because the sample size is only 100 points compared to the original 350 points.
+The smaller sample size could capture the local structure but failed to capture the overall topological structure.
+So small cans and large pans are all considered as cylinders though their overall shapes are different.
 
 \begin{figure}[H]
     \centering
@@ -293,7 +297,15 @@ As we can see, the overall distribution of my implementation is very close to th
     \label{fig:smurph_compare}
 \end{figure}
 
-
+I also calculated the linear kernel ($s = 100$ for sample size) and HOD kernel ($b=10$ for number of bins in histogram) of this dataset.
+The kernel PCA using these three different kernels are shown in Figure ~\ref{fig:db_kernels}
+First of all, we can easily see that the linear kernel don't perform very well.
+We can hardly see any meaningful structure from figure.
+The HOD kernel performs pretty well comparing with the other two.
+There are clearly four clusters using HOD kernel: \{knife\}, \{pan with handle, long bottle\}, \{small can, mug\}, and \{bowl\}.
+It seems HOD kernel could also capture topological feature of a point cloud.
+However, since the four clusters not only varies in topology but also varies in shape,
+it's also possible HOD kernel is capturing the overall shape (e.g. long and thin vs. short and round).
 
 \begin{figure}[H]
     \centering
@@ -310,25 +322,29 @@ As we can see, the overall distribution of my implementation is very close to th
         \caption{HOD Kernel}
     \end{subfigure}%
     \caption{Kernel PCA results for Kitchen Utensil Dataset}
+    \label{fig:db_kernels}
 \end{figure}
 
 \subsection{Synthetic Dataset -- Multiple Holes}
 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[h]{0.33\textwidth}
+    \begin{subfigure}[h]{0.3\textwidth}
         \includegraphics[width=\linewidth]{mh_linear}
         \caption{Linear Kernel}
     \end{subfigure}
-    \begin{subfigure}[h]{0.33\textwidth}
+    \begin{subfigure}[h]{0.3\textwidth}
         \includegraphics[width=\linewidth]{mh_smurf}
         \caption{SMURPH Kernel}
     \end{subfigure}%
-    \begin{subfigure}[h]{0.33\textwidth}
+    \begin{subfigure}[h]{0.3\textwidth}
         \includegraphics[width=\linewidth]{mh_hod}
         \caption{HOD Kernel}
     \end{subfigure}%
-    \caption{Kernel PCA results for Synthetic Multiholes Dataset}
+    \begin{subfigure}[h]{0.05\textwidth}
+        \includegraphics[width=\linewidth]{mh_legend}
+    \end{subfigure}%
+    \caption{Kernel PCA results for Synthetic Multiholes Dataset. The legend X-Y means the point cloud has X number of holes and the size of holes is Y (S=Small, M=Medium, L=Large, XL=Extra Large).}
 \end{figure}
 
 \subsection{Synthetic Dataset -- Multiscale}
@@ -350,7 +366,7 @@ As we can see, the overall distribution of my implementation is very close to th
     \begin{subfigure}[h]{0.08\textwidth}
         \includegraphics[width=\linewidth]{ms_legend}
     \end{subfigure}%
-    \caption{Kernel PCA results for Synthetic Multiscale Dataset}
+    \caption{Kernel PCA results for Synthetic Multiscale Dataset. The legend X-Y-Z means the point cloud is X-shaped, formed with Y kind of ribbon, and size of the point cloud is Z (S=Small, M=Medium, L=Large, XL=Extra Large).}
 \end{figure}
 
 \begin{figure}[H]

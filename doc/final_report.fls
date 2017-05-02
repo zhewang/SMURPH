@@ -213,6 +213,8 @@ INPUT /usr/local/texlive/2016/texmf-dist/fonts/tfm/public/cm/cmr9.tfm
 INPUT original_smurph.png
 INPUT ./original_smurph.png
 INPUT ./original_smurph.png
+INPUT /usr/local/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
+INPUT /usr/local/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
 INPUT DB_linear.png
 INPUT ./DB_linear.png
 INPUT ./DB_linear.png
@@ -230,6 +232,9 @@ INPUT ./mh_smurf.png
 INPUT mh_hod.png
 INPUT ./mh_hod.png
 INPUT ./mh_hod.png
+INPUT mh_legend.png
+INPUT ./mh_legend.png
+INPUT ./mh_legend.png
 INPUT ms_linear.png
 INPUT ./ms_linear.png
 INPUT ./ms_linear.png

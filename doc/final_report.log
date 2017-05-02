@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  2 MAY 2017 10:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  2 MAY 2017 12:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -616,100 +616,111 @@ File: ms_4.png Graphic file (type png)
  <use ms_4.png>
 Package pdftex.def Info: ms_4.png used on input line 263.
 (pdftex.def)             Requested size: 93.94957pt x 93.94768pt.
- <DB_smurf.png, id=103, 624.4128pt x 483.4863pt>
+ [3 <./mh_1.png> <./mh_2.png> <./mh_3.png> <./mh_4.png> <./mh_5.png> <./mh_6.png> <./mh_7.png> <./mh_8.png> <./ms_1.png> <./ms_2.png> <./ms_3.png> <./ms_4.png>] <DB_smurf.png, id=122, 624.4128pt x 482.7636pt>
 File: DB_smurf.png Graphic file (type png)
  <use DB_smurf.png>
-Package pdftex.def Info: DB_smurf.png used on input line 285.
-(pdftex.def)             Requested size: 187.89914pt x 145.48964pt.
- <original_smurph.png, id=104, 600.2425pt x 499.8675pt>
+Package pdftex.def Info: DB_smurf.png used on input line 289.
+(pdftex.def)             Requested size: 187.89914pt x 145.27217pt.
+ <original_smurph.png, id=123, 600.2425pt x 499.8675pt>
 File: original_smurph.png Graphic file (type png)
  <use original_smurph.png>
-Package pdftex.def Info: original_smurph.png used on input line 289.
+Package pdftex.def Info: original_smurph.png used on input line 293.
 (pdftex.def)             Requested size: 173.80705pt x 144.73666pt.
- [3 <./mh_1.png> <./mh_2.png> <./mh_3.png> <./mh_4.png> <./mh_5.png> <./mh_6.png> <./mh_7.png> <./mh_8.png> <./ms_1.png> <./ms_2.png> <./ms_3.png> <./ms_4.png>] <DB_linear.png, id=124, 462.528pt x 346.896pt>
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 305.
+ (/usr/local/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 305.
+ <DB_linear.png, id=125, 462.528pt x 346.896pt>
 File: DB_linear.png Graphic file (type png)
  <use DB_linear.png>
-Package pdftex.def Info: DB_linear.png used on input line 301.
+Package pdftex.def Info: DB_linear.png used on input line 313.
 (pdftex.def)             Requested size: 155.02pt x 116.26512pt.
 File: DB_smurf.png Graphic file (type png)
  <use DB_smurf.png>
-Package pdftex.def Info: DB_smurf.png used on input line 305.
-(pdftex.def)             Requested size: 155.02pt x 120.03024pt.
- <DB_hod.png, id=125, 462.528pt x 346.896pt>
+Package pdftex.def Info: DB_smurf.png used on input line 317.
+(pdftex.def)             Requested size: 155.02pt x 119.85083pt.
+ <DB_hod.png, id=126, 462.528pt x 346.896pt>
 File: DB_hod.png Graphic file (type png)
  <use DB_hod.png>
-Package pdftex.def Info: DB_hod.png used on input line 309.
+Package pdftex.def Info: DB_hod.png used on input line 321.
 (pdftex.def)             Requested size: 155.02pt x 116.26512pt.
- <mh_linear.png, id=126, 462.528pt x 346.896pt>
+ <mh_linear.png, id=127, 462.528pt x 346.896pt>
 File: mh_linear.png Graphic file (type png)
  <use mh_linear.png>
-Package pdftex.def Info: mh_linear.png used on input line 320.
-(pdftex.def)             Requested size: 155.02pt x 116.26512pt.
- <mh_smurf.png, id=127, 462.528pt x 346.896pt>
+Package pdftex.def Info: mh_linear.png used on input line 333.
+(pdftex.def)             Requested size: 140.92793pt x 105.69461pt.
+ <mh_smurf.png, id=128, 462.528pt x 346.896pt>
 File: mh_smurf.png Graphic file (type png)
  <use mh_smurf.png>
-Package pdftex.def Info: mh_smurf.png used on input line 324.
-(pdftex.def)             Requested size: 155.02pt x 116.26512pt.
- <mh_hod.png, id=128, 462.528pt x 346.896pt>
+Package pdftex.def Info: mh_smurf.png used on input line 337.
+(pdftex.def)             Requested size: 140.92793pt x 105.69461pt.
+ <mh_hod.png, id=129, 462.528pt x 346.896pt>
 File: mh_hod.png Graphic file (type png)
  <use mh_hod.png>
-Package pdftex.def Info: mh_hod.png used on input line 328.
-(pdftex.def)             Requested size: 155.02pt x 116.26512pt.
- <ms_linear.png, id=129, 462.528pt x 346.896pt>
-File: ms_linear.png Graphic file (type png)
- <use ms_linear.png>
-Package pdftex.def Info: ms_linear.png used on input line 339.
+Package pdftex.def Info: mh_hod.png used on input line 341.
 (pdftex.def)             Requested size: 140.92793pt x 105.69461pt.
 
-<ms_smurf.png, id=130, 462.528pt x 346.896pt>
+<mh_legend.png, id=130, 53.4798pt x 239.9364pt>
+File: mh_legend.png Graphic file (type png)
+ <use mh_legend.png>
+Package pdftex.def Info: mh_legend.png used on input line 345.
+(pdftex.def)             Requested size: 23.48918pt x 105.38562pt.
+ [4 <./DB_smurf.png> <./original_smurph.png> <./DB_linear.png> <./DB_hod.png>] <ms_linear.png, id=141, 462.528pt x 346.896pt>
+File: ms_linear.png Graphic file (type png)
+ <use ms_linear.png>
+Package pdftex.def Info: ms_linear.png used on input line 355.
+(pdftex.def)             Requested size: 140.92793pt x 105.69461pt.
+ <ms_smurf.png, id=142, 462.528pt x 346.896pt>
 File: ms_smurf.png Graphic file (type png)
  <use ms_smurf.png>
-Package pdftex.def Info: ms_smurf.png used on input line 343.
+Package pdftex.def Info: ms_smurf.png used on input line 359.
 (pdftex.def)             Requested size: 140.92793pt x 105.69461pt.
- <ms_hod.png, id=131, 462.528pt x 346.896pt>
+ <ms_hod.png, id=143, 462.528pt x 346.896pt>
 File: ms_hod.png Graphic file (type png)
  <use ms_hod.png>
-Package pdftex.def Info: ms_hod.png used on input line 347.
+Package pdftex.def Info: ms_hod.png used on input line 363.
 (pdftex.def)             Requested size: 140.92793pt x 105.69461pt.
- <ms_legend.png, id=132, 93.58965pt x 177.42285pt>
+ <ms_legend.png, id=144, 89.25345pt x 179.9523pt>
 File: ms_legend.png Graphic file (type png)
  <use ms_legend.png>
-Package pdftex.def Info: ms_legend.png used on input line 351.
-(pdftex.def)             Requested size: 37.58125pt x 71.24672pt.
- [4 <./DB_smurf.png> <./original_smurph.png> <./DB_linear.png> <./DB_hod.png> <./mh_linear.png> <./mh_smurf.png> <./mh_hod.png>] <ms_hod_1.png, id=147, 462.528pt x 346.896pt>
+Package pdftex.def Info: ms_legend.png used on input line 367.
+(pdftex.def)             Requested size: 37.58125pt x 75.77165pt.
+ <ms_hod_1.png, id=145, 462.528pt x 346.896pt>
 File: ms_hod_1.png Graphic file (type png)
  <use ms_hod_1.png>
-Package pdftex.def Info: ms_hod_1.png used on input line 359.
+Package pdftex.def Info: ms_hod_1.png used on input line 375.
 (pdftex.def)             Requested size: 187.89914pt x 140.92615pt.
- <ms_hod_2.png, id=148, 462.528pt x 346.896pt>
+ <ms_hod_2.png, id=146, 462.528pt x 346.896pt>
 File: ms_hod_2.png Graphic file (type png)
  <use ms_hod_2.png>
-Package pdftex.def Info: ms_hod_2.png used on input line 363.
+Package pdftex.def Info: ms_hod_2.png used on input line 379.
 (pdftex.def)             Requested size: 187.89914pt x 140.92615pt.
- (./final_report.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 373.
- [5 <./ms_linear.png> <./ms_smurf.png> <./ms_hod.png> <./ms_legend.png> <./ms_hod_1.png> <./ms_hod_2.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 373.
+ (./final_report.bbl [5 <./mh_linear.png> <./mh_smurf.png> <./mh_hod.png> <./mh_legend.png> <./ms_linear.png> <./ms_smurf.png> <./ms_hod.png> <./ms_legend.png> <./ms_hod_1.png> <./ms_hod_2.png>])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 389.
+ [6]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 389.
  (./final_report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 373.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 373.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 389.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 389.
 Package rerunfilecheck Info: File `final_report.out' has not changed.
 (rerunfilecheck)             Checksum: 93573BA8772AC23DEA253C3A5E788EF5;926.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 373.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 389.
  ) 
 Here is how much of TeX's memory you used:
- 10416 strings out of 493014
- 158152 string characters out of 6133351
- 252113 words of memory out of 5000000
- 13761 multiletter control sequences out of 15000+600000
+ 10441 strings out of 493014
+ 158581 string characters out of 6133351
+ 251190 words of memory out of 5000000
+ 13781 multiletter control sequences out of 15000+600000
  10800 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,8n,39p,275b,484s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,8n,39p,355b,484s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on final_report.pdf (5 pages, 1422820 bytes).
+Output written on final_report.pdf (6 pages, 1447544 bytes).
 PDF statistics:
- 198 PDF objects out of 1000 (max. 8388607)
- 128 compressed objects within 2 object streams
- 31 named destinations out of 1000 (max. 500000)
- 248 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 204 PDF objects out of 1000 (max. 8388607)
+ 132 compressed objects within 2 object streams
+ 32 named destinations out of 1000 (max. 500000)
+ 253 words of extra memory for PDF output out of 10000 (max. 10000000)
 
