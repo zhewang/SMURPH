@@ -245,7 +245,7 @@ So I designed this dataset to evaluate this ability.
 Figure ~\ref{fig:multiscale_dataset} shows a few samples.
 The dataset basically have two shapes of data: O-shaped and $\infty$-shaped.
 Each shape could be consist of solid ribbons, or ribbons with small holes.
-These four point clouds, as Figure ~\ref{fig:multiscale_dataset} shows, forms a set.
+These four point clouds, as Figure ~\ref{fig:multiscale_dataset} shows, form a set.
 There are 3 sets in this dataset with size $40 \times 40$, $25 \times 25$, and $8 \times 8$.
 
 \begin{figure}[H]
@@ -266,7 +266,14 @@ There are 3 sets in this dataset with size $40 \times 40$, $25 \times 25$, and $
     \label{fig:multiscale_dataset}
 \end{figure}
 
-\section{Experimental Results}
+\section{Implementation}
+The kernels are mainly written in Python.
+For SMURPH kernel, the persistence homology calculation is using Ripser (https://github.com/Ripser/ripser).
+Ripser computes the Vietoris-Rips persistence diagram, which is an important step for calculating SMURPH kernel. 
+The reason to used Ripser is because it is currently the fastest library to compute VR persistence homology.
+Using Ripser greatly reduced the time to compute SMURPH kernel.
+
+\section{Evaluation}
 
 \subsection{Kitchen Utensil Dataset}
 
@@ -285,8 +292,8 @@ So small cans and large pans are all considered as cylinders though their overal
 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[h]{0.4\textwidth}
-        \includegraphics[width=\linewidth]{DB_smurf}
+    \begin{subfigure}[H]{0.4\textwidth}
+        \includegraphics[width=\linewidth]{DB_smurf_with_legend}
         \caption{My implementation}
     \end{subfigure}
     \begin{subfigure}[h]{0.37\textwidth}
@@ -309,23 +316,47 @@ it's also possible HOD kernel is capturing the overall shape (e.g. long and thin
 
 \begin{figure}[H]
     \centering
-    \begin{subfigure}[h]{0.33\textwidth}
+    \begin{subfigure}[H]{0.28\textwidth}
         \includegraphics[width=\linewidth]{DB_linear}
         \caption{Linear Kernel}
     \end{subfigure}
-    \begin{subfigure}[h]{0.33\textwidth}
+    \begin{subfigure}[h]{0.28\textwidth}
         \includegraphics[width=\linewidth]{DB_smurf}
         \caption{SMURPH Kernel}
     \end{subfigure}%
-    \begin{subfigure}[h]{0.33\textwidth}
+    \begin{subfigure}[h]{0.28\textwidth}
         \includegraphics[width=\linewidth]{DB_hod}
         \caption{HOD Kernel}
     \end{subfigure}%
-    \caption{Kernel PCA results for Kitchen Utensil Dataset}
+    \begin{subfigure}[h]{0.1\textwidth}
+        \includegraphics[width=\linewidth]{DB_legend}
+    \end{subfigure}%
+    \caption{Kernel PCA results using three different kernels for Kitchen Utensil Dataset}
     \label{fig:db_kernels}
 \end{figure}
 
 \subsection{Synthetic Dataset -- Multiple Holes}
+
+The SMURPH kernel, linearl kernel and HOD kernel are calculated for this dataset.
+The parameters for SMURPH kernel are:  multiple radius of $r = [40,20,10]$, $m = 20$ centers per point cloud, $s = 1$ samples per center, and a budget of $b = 100$ points per sample.
+Linearl kernel samples $s=100$ points from each point cloud.
+HOD kernel use a 10-bin histogram.
+The kernel PCA results are shown in Figure ~\ref{fig:mh_kernels}
+First, there isn't any obvious structure in the result for linear kernel.
+So clearly linear kernel can't capture topological features of the data.
+For the result of SMURPH kernel, let's put the dots of the same color together as a group,
+which means we group together the point clouds with the same size of holes in it.
+So we have red set, which is \{*-S\}, blue set, which is \{*-M\}, green set, which is \{*-L\}, and purple set \{*-XL\}.
+We can see that although each set don't form a perfect seprated group, they both share the same tendency:
+from point clouds containing small sized holes to large sized holes, the 2D PCA becomes more and more sparse.
+This indicates SMURPH kernel is good at seperating point clouds with different number of holes.
+One thing to notice is that this doesn't mean SMURPH kernel is not good at seperating point clouds with different size of holes.
+Because in this dataset, the difference between holes of size S, M, L and XL is not so much.
+For HOD kernel, we can still analyze the PCA result in the same way.
+First, as we observed in the case of SMURPH kernel, the the group of point clouds with smaller holes forms a dense cluster.
+The group of point clouds with larger holes forms a sparse cluster.
+Besides, we can also see that point clouds of the same size forms a cluster.
+This means HOG kernel also captures the size of holes.
 
 \begin{figure}[H]
     \centering
@@ -345,9 +376,24 @@ it's also possible HOD kernel is capturing the overall shape (e.g. long and thin
         \includegraphics[width=\linewidth]{mh_legend}
     \end{subfigure}%
     \caption{Kernel PCA results for Synthetic Multiholes Dataset. The legend X-Y means the point cloud has X number of holes and the size of holes is Y (S=Small, M=Medium, L=Large, XL=Extra Large).}
+    \label{fig:mh_kernels}
 \end{figure}
 
 \subsection{Synthetic Dataset -- Multiscale}
+
+SMURPH kernel, linear kernel and HOD kernel are are evaluated for this dataset.
+The parameters for SMURPH kernel are:  multiple radius of $r = [40,10,5]$, $m = 5$ centers per point cloud, $s = 1$ samples per center, and a budget of $b = 100$ points per sample.
+Linearl kernel samples $s=300$ points from each point cloud.
+HOD kernel use a 10-bin histogram.
+The kernel PCA results are shown in Figure ~\ref{fig:ms_kernels}.
+The result of linear kernel now has some structure in it.
+Small point clouds are on the right side of the figure and large point clouds are on the left side of the figure.
+The result of SUMRPH kernel also has this structure.
+It seperates point clouds with different sizes very well.
+How ever, it failes to seperate point clouds with obvious different topological features.
+On contrary, HOD kernel seems captured the topological features.
+O-shaped point clouds form a cluster and $\infty$-shaped point clouds form another.
+But clearly HOD kernel didn't capture the scale difference.
 
 \begin{figure}[H]
     \centering
@@ -366,23 +412,40 @@ it's also possible HOD kernel is capturing the overall shape (e.g. long and thin
     \begin{subfigure}[h]{0.08\textwidth}
         \includegraphics[width=\linewidth]{ms_legend}
     \end{subfigure}%
-    \caption{Kernel PCA results for Synthetic Multiscale Dataset. The legend X-Y-Z means the point cloud is X-shaped, formed with Y kind of ribbon, and size of the point cloud is Z (S=Small, M=Medium, L=Large, XL=Extra Large).}
+    \caption{Kernel PCA results for Synthetic Multiscale Dataset. The legend X-Y-Z means the point cloud is X-shaped, formed with ribbon Y, and size of the point cloud is Z (S=Small, M=Medium, L=Large, XL=Extra Large).}
+    \label{fig:ms_kernels}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[h]{0.4\textwidth}
-        \includegraphics[width=\linewidth]{ms_hod_1}
-        \caption{Bottom-right area}
-    \end{subfigure}
-    \begin{subfigure}[h]{0.4\textwidth}
-        \includegraphics[width=\linewidth]{ms_hod_2}
-        \caption{Top-left area}
-    \end{subfigure}%
-    \caption{HOD result zoom in}
-\end{figure}
+%\begin{figure}[H]
+    %\centering
+    %\begin{subfigure}[h]{0.4\textwidth}
+        %\includegraphics[width=\linewidth]{ms_hod_1}
+        %\caption{Bottom-right area}
+    %\end{subfigure}
+    %\begin{subfigure}[h]{0.4\textwidth}
+        %\includegraphics[width=\linewidth]{ms_hod_2}
+        %\caption{Top-left area}
+    %\end{subfigure}%
+    %\caption{HOD result zoom in}
+%\end{figure}
 
 \section{Discussion}
+The experiments show that SMURPH kernel can capture topological features of point clouds.
+However, it is not significantly better than other simple kernel.
+When used in practice, I doubt it will always improve the performance of an application.
+Although in the original paper, the authors have conducted other experiments to show the
+effectiveness of SMURPH kernel, they only compared it with simple linear kernel and RBF kernel,
+which is way too simple and don't really make sense in the context of point cloud data.
+
+Another limiation is this kernel has too many free parameters to tune.
+User need to decide a radius scheme, which could be one value or a list of different values, number of centers, bootstrap sample size, and number of bootstraps.
+These parameters are essential to the performance of the kernel.
+So it will cost the user a lot of time for tuning.
+Also, with so many degree of freedom, when the kernel is used for regression or classification,
+it would be very suseptible to overfitting.
+
+As a summary, the idea of SMURPH kernel is novel and have the potential to capture topological features of datasets.
+However, without further investigation and improvement, SMURPH kernel will not be suitable for using in practice.
 
 \bibliographystyle{unsrt}
 \bibliography{cites}

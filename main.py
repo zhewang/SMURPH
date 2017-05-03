@@ -291,6 +291,7 @@ if __name__ == '__main__':
     # plot2DPCA_Multiholes('kernel_multiholes_[40_20_10]_20_100.txt')
     # plot2DPCA_Multiholes('kernel.txt')
 
+    # exp_DB(smurph.kernelMP, args=([40,10,5], 20, 100, 1))
     # exp_multiscale(hod.kernel, args = ())
     # exp_multiscale(linear.kernel, args = (100,))
     plot2DPCA_Multiscale('kernel_multiscale_[40_10_5]_5_300_1.txt')
